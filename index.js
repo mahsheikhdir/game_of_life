@@ -17,47 +17,57 @@ let grid = new Array(rows)
   .fill(0)
   .map(() => new Array(cols).fill(0).map(() => 0));
 
-canvas.addEventListener("mousedown", function (event) {
-  let x = Math.floor(event.clientX / zoom) - 1;
-  let y = Math.floor(event.clientY / zoom) - 1;
-  console.log(x, y);
+let isDrawing = false;
 
-  if (grid[x][y] === 0) {
+canvas.addEventListener("mousedown", () => {
+  isDrawing = true;
+});
+
+canvas.addEventListener("mousemove", (e) => {
+  if (isDrawing) {
+    let x = Math.floor(e.offsetX / zoom);
+    let y = Math.floor(e.offsetY / zoom);
     grid[x][y] = 1;
     draw();
   }
 });
 
+canvas.addEventListener("mouseup", (e) => {
+  isDrawing = false;
+});
+
 let play = false;
-let time = 100
+let time = 100;
 let interval;
 
 function randomize() {
-    grid = new Array(rows)
-      .fill(0)
-      .map(() => new Array(cols).fill(0).map(() => Math.floor(Math.random() * 2)));
-    draw();
+  grid = new Array(rows)
+    .fill(0)
+    .map(() =>
+      new Array(cols).fill(0).map(() => Math.floor(Math.random() * 2))
+    );
+  draw();
 }
 function start() {
-    play = play ? false : true;
+  play = play ? false : true;
 
-    if (play){
-        button.innerHTML = "Stop";
-        draw();
-        interval = setInterval(() => {
-          nextGen();
-          draw();
-        }, time);
-    } else {
-        button.innerHTML = "Start";
-        clearInterval(interval);
-    }
+  if (play) {
+    button.innerHTML = "Stop";
+    draw();
+    interval = setInterval(() => {
+      nextGen();
+      draw();
+    }, time);
+  } else {
+    button.innerHTML = "Start";
+    clearInterval(interval);
+  }
 }
 
 function nextGen() {
   let newGrid = new Array(rows)
-  .fill(0)
-  .map(() => new Array(cols).fill(0).map(() => 0));
+    .fill(0)
+    .map(() => new Array(cols).fill(0).map(() => 0));
   let coords = [
     [-1, -1],
     [-1, 1],
@@ -89,7 +99,7 @@ function nextGen() {
       } else if (!alive && neighbors === 3) {
         newGrid[x][y] = 1;
       } else {
-          newGrid[x][y] = grid[x][y];
+        newGrid[x][y] = grid[x][y];
       }
     }
   }
@@ -105,5 +115,3 @@ function draw() {
     }
   }
 }
-
-
