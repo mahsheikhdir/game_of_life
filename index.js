@@ -19,8 +19,12 @@ let grid = new Array(rows)
 
 let isDrawing = false;
 
-canvas.addEventListener("mousedown", () => {
+canvas.addEventListener("mousedown", (e) => {
   isDrawing = true;
+  let x = Math.floor(e.offsetX / zoom);
+  let y = Math.floor(e.offsetY / zoom);
+  grid[x][y] = 1;
+  draw();
 });
 
 canvas.addEventListener("mousemove", (e) => {
